@@ -1,3 +1,8 @@
+DROP TABLE IF EXISTS proman_boards;
+DROP TABLE IF EXISTS proman_cards;
+DROP TABLE IF EXISTS proman_statuses;
+DROP TABLE IF EXISTS proman_users;
+
 CREATE TABLE proman_boards (
 	id SERIAL PRIMARY KEY NOT NULL,
 	title VARCHAR(50) NOT NULL,
@@ -12,7 +17,7 @@ CREATE TABLE proman_cards (
 	board_id INTEGER NOT NULL,
 	title VARCHAR(50) NOT NULL,
 	status_id SMALLINT NOT NULL,
-	order SMALLINT NOT NULL
+	orderr SMALLINT NOT NULL
 );
 
 
