@@ -54,3 +54,14 @@ def get_public_boards(cursor):
 
     cursor.execute(sql_query)
     return cursor.fetchall()
+
+
+@db_connection.connection_handler
+def save_new_user(cursor, name, password):
+
+    sql_query = """
+                INSERT INTO proman_users (name, pwd)
+                VALUES (%(name)s, %(password)s)
+                """
+
+    cursor.execute(sql_query, {'name': name, 'password': password})
