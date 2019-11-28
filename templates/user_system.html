@@ -1,17 +1,28 @@
 {% extends 'layout.html' %}
-{% block content %}
-  {% if action == 'register' %}
-    {% set action = "register_route" %}
-    {% set buttonText = 'Register' %}
-  {% elif action == 'login' %}
-    {% set action = "login_route" %}
-    {% set buttonText = 'Login' %}
-  {% endif %}
-  <div class="user-system-div">
-    <form method="post" action="{{ url_for(action) }}">
-      <input type="text" name="login">
-      <input type="password" name="password">
-      <button type="submit">{{ buttonText }}</button>
-    </form>
-  </div>
-{% endblock %}
+
+  {% block content %}
+
+    {% if action == 'register' %}
+      {% set action = "register_route" %}
+      {% set text = 'Register' %}
+      {% set message = 'User already exist!' %}
+    {% elif action == 'login' %}
+      {% set action = "login_route" %}
+      {% set text = 'Login' %}
+      {% set message = 'Wrong login data!' %}
+    {% endif %}
+
+    <div class="user-system-div">
+    <h2>{{ text }}</h2>
+      <form method="post" class="form" action="{{ url_for(action) }}">
+        <input type="text" placeholder="Login" name="login" minlength="3" required>
+        <input type="password" placeholder="Password" name="password" minlength="3" required>
+        <button type="submit">{{ text }}</button>
+      </form>
+      {% if bad_data %}
+        <h2 class="wrong-data">{{ message }}</h2>
+      {% endif %}
+    </div>
+
+
+  {% endblock %}
