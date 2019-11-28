@@ -22,35 +22,46 @@ def index(login=None):
                            public_cards=public_cards)
 
 
-@app.route("/user_page")
+@app.route("/user_page", methods=['GET'])
 def user_page_route(action=None):
 
-    if request.args.get('action'):
-        action = request.args.get('action')
+    if request.method == 'GET':
 
-    if 'bad_login_data' in session:
-        bad_login_data = session['bad_login_data']
-        del session['bad_login_data']
-        print(action)
-        return render_template('user_system.html',
-                               action=action,
-                               bad_login_data=bad_login_data)
-    else:
-        return render_template('user_system.html',
-                               action=action)
+        if request.args.get('action'):
+            action = request.args.get('action')
+        else:
+            return redirect(url_for('index'))
+
+        if 'bad_data' in session:
+            bad_data = session['bad_data']
+            del session['bad_data']
+            return render_template('user_system.html',
+                                   action=action,
+                                   bad_data=bad_data)
+        else:
+            return render_template('user_system.html',
+                                   action=action)
 
 
 @app.route("/register", methods=["POST"])
 def register_route():
+
     if request.method == 'POST':
         login = request.form['login']
         password = password_manager.hash_password(request.form['password'])
-        data_handler.save_new_user(login, password)
-        return 'abc'
+
+        if data_handler.save_new_user(login, password):
+            session['user'] = login
+            return redirect(url_for('index'))
+
+        else:
+            session['bad_data'] = True
+            return redirect(url_for('user_page_route', action='register'))
 
 
 @app.route("/login", methods=['POST'])
 def login_route():
+
     if request.method == 'POST':
         login = request.form['login']
         plain_text_password = request.form['password']
@@ -58,7 +69,7 @@ def login_route():
         password_matches = False
 
         if hashed_password is None:
-            session['bad_login_data'] = True
+            session['bad_data'] = True
         else:
             password_matches = password_manager.verify_password(plain_text_password, hashed_password['pwd'])
 
@@ -66,13 +77,14 @@ def login_route():
             session['user'] = login
             return redirect(url_for('index', login=login))
         else:
-            session['bad_login_data'] = True
+            session['bad_data'] = True
 
         return redirect(url_for('user_page_route', action='login'))
 
 
 @app.route("/logout")
 def logout_route():
+
     del session['user']
     return redirect(url_for('index'))
 
