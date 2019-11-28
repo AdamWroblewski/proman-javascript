@@ -1,5 +1,6 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, request
 from util import json_response
+import password_manager
 import data_handler
 
 import data_handler
@@ -20,6 +21,28 @@ def index():
                            public_cards=public_cards)
 
 
+@app.route("/user_page")
+def user_page_route():
+    action = request.args['action']
+    print(action)
+    return render_template('user_system.html', action=action)
+
+
+@app.route("/register", methods=["POST"])
+def register_route():
+    if request.method == 'POST':
+        login = request.form['login']
+        password = password_manager.hash_password(request.form['password'])
+        data_handler.save_new_user(login, password)
+        return 'abc'
+
+
+@app.route("/login", methods=['POST'])
+def login_route():
+    if request.method == 'POST':
+        return 'bca'
+
+
 @app.route("/get-boards")
 @json_response
 def get_boards():
@@ -37,6 +60,8 @@ def get_cards_for_board(board_id: int):
     :param board_id: id of the parent board
     """
     return data_handler.get_cards_for_board(board_id)
+
+
 
 
 def main():
