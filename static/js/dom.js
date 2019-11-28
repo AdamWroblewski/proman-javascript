@@ -39,8 +39,8 @@ function getBoardCollumns(boardColumn){
         nodeTitle = nodeTitle[0];
         nodeContent = nodeContent[0];
 
-
     }
+    return result;
 }
 
 export let dom = {
@@ -54,7 +54,6 @@ export let dom = {
     loadBoards: function (boards) {
         let count = boards.length, board, n;
         for(var i = 0; i < count; i++){
-            dom.cards.push({newC: null, inProgress: null, testing: null, done: null});
             boardMenus.push({addC: null, toggle: null, container: null, visible: true});
 
 
@@ -65,8 +64,12 @@ export let dom = {
                 else if(elems[j].className == "board-toggle") boardMenus[i].toggle = elems[j];
             }
             elems = board.querySelectorAll(".board-columns");
-            if(elems.length > 0) boardMenus[i].container = elems[0];
+            if(elems.length > 0){
+                boardMenus[i].container = elems[0];
+                elems = getBoardCollumns(boardMenus[i].container);
+            } else elems = {newC: null, inProgress: null, testing: null, done: null};
 
+            dom.cards.push(elems);
         }
 
         toggle(boardMenus);
