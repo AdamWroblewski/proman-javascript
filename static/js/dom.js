@@ -3,6 +3,14 @@ import { dataHandler } from "./data_handler.js";
 
 var boardMenus = [];
 
+function typeCardTitle(e){
+    var event = (e)?e:window.event, input;
+
+    if(event.target) input = event.target;
+    else if(event.srcElement) input = event.srcElement;
+
+}
+
 function createCard(container){
     var cardNode = document.createElement("div"), node = document.createElement("div");
     cardNode.className = "card";
@@ -83,6 +91,8 @@ function getBoardCollumns(boardColumn){
 
     return result;
 }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 export let dom = {
     cards: [],
