@@ -23,9 +23,21 @@ def index(login=None):
 
 
 @app.route("/user_page")
-def user_page_route():
-    action = request.args['action']
-    return render_template('user_system.html', action=action)
+def user_page_route(action=None):
+
+    if request.args.get('action'):
+        action = request.args.get('action')
+
+    if 'bad_login_data' in session:
+        bad_login_data = session['bad_login_data']
+        del session['bad_login_data']
+        print(action)
+        return render_template('user_system.html',
+                               action=action,
+                               bad_login_data=bad_login_data)
+    else:
+        return render_template('user_system.html',
+                               action=action)
 
 
 @app.route("/register", methods=["POST"])
@@ -43,20 +55,26 @@ def login_route():
         login = request.form['login']
         plain_text_password = request.form['password']
         hashed_password = data_handler.get_user_hashed_password(login)
-        print(login, plain_text_password, hashed_password)
+        password_matches = False
 
         if hashed_password is None:
-            return 'abc'
-
-        password_matches = password_manager.verify_password(plain_text_password, hashed_password['pwd'])
+            session['bad_login_data'] = True
+        else:
+            password_matches = password_manager.verify_password(plain_text_password, hashed_password['pwd'])
 
         if password_matches:
             session['user'] = login
             return redirect(url_for('index', login=login))
         else:
-            return 'abc'
+            session['bad_login_data'] = True
 
-        return session['user']
+        return redirect(url_for('user_page_route', action='login'))
+
+
+@app.route("/logout")
+def logout_route():
+    del session['user']
+    return redirect(url_for('index'))
 
 
 @app.route("/get-boards")
