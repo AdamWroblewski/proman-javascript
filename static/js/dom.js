@@ -29,7 +29,8 @@ export let dom = {
             </ul>
         `;
 
-        let boardsContainer = document.querySelector('#boards');
+        let boardsContainer = document.querySelectorAll('.board');
+        console.log(boardsContainer)
         boardsContainer.insertAdjacentHTML("beforeend", outerHtml);
     },
     loadCards: function (boardId) {
@@ -40,4 +41,8 @@ export let dom = {
         // it adds necessary event listeners also
     },
     // here comes more features
+};
+
+let createBoard = function () {
+
 };
