@@ -1,4 +1,5 @@
 import persistence
+import db_connection
 
 
 def get_card_status(status_id):
@@ -28,3 +29,28 @@ def get_cards_for_board(board_id):
             card['status_id'] = get_card_status(card['status_id'])  # Set textual status for the card
             matching_cards.append(card)
     return matching_cards
+
+
+@db_connection.connection_handler
+def get_public_cards(cursor):
+
+    sql_query = """
+                SELECT * FROM proman_boards AS pb 
+                JOIN proman_cards AS pc
+                ON pb.id = pc.board_id
+                WHERE private = 'f';
+                """
+
+    cursor.execute(sql_query)
+    return cursor.fetchall()
+
+
+@db_connection.connection_handler
+def get_public_boards(cursor):
+
+    sql_query = """    
+                SELECT * FROM proman_boards;
+                """
+
+    cursor.execute(sql_query)
+    return cursor.fetchall()
