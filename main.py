@@ -1,5 +1,6 @@
 from flask import Flask, render_template, url_for
 from util import json_response
+import data_handler
 
 import data_handler
 
@@ -11,7 +12,13 @@ def index():
     """
     This is a one-pager which shows all the boards and cards
     """
-    return render_template('index.html')
+
+    public_boards = data_handler.get_public_boards()
+    public_cards = data_handler.get_public_cards()
+    print(public_boards)
+
+    return render_template('index.html', public_boards=public_boards,
+                           public_cards=public_cards)
 
 
 @app.route("/get-boards")
