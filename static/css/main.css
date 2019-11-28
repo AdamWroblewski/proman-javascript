@@ -135,7 +135,8 @@ section.board{
 }
 
 /* Style the links inside the navigation bar */
-.topnav a {
+.topnav a, span {
+    text-align: right;
   float: left;
   color: #f2f2f2;
   text-align: center;
