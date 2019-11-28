@@ -15,9 +15,8 @@ def index():
 
     public_boards = data_handler.get_public_boards()
     public_cards = data_handler.get_public_cards()
-    print(public_boards)
 
-    return render_template('index.html', public_boards=public_boards,
+    return render_template('boards.html', public_boards=public_boards,
                            public_cards=public_cards)
 
 
