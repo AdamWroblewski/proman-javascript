@@ -1,15 +1,16 @@
-from flask import Flask, render_template, url_for, request
+from flask import Flask, render_template, url_for, request, session, redirect
 from util import json_response
 import password_manager
+import os
 import data_handler
 
-import data_handler
 
 app = Flask(__name__)
+app.secret_key = os.urandom(24)
 
 
 @app.route("/")
-def index():
+def index(login=None):
     """
     This is a one-pager which shows all the boards and cards
     """
@@ -24,7 +25,6 @@ def index():
 @app.route("/user_page")
 def user_page_route():
     action = request.args['action']
-    print(action)
     return render_template('user_system.html', action=action)
 
 
@@ -40,7 +40,23 @@ def register_route():
 @app.route("/login", methods=['POST'])
 def login_route():
     if request.method == 'POST':
-        return 'bca'
+        login = request.form['login']
+        plain_text_password = request.form['password']
+        hashed_password = data_handler.get_user_hashed_password(login)
+        print(login, plain_text_password, hashed_password)
+
+        if hashed_password is None:
+            return 'abc'
+
+        password_matches = password_manager.verify_password(plain_text_password, hashed_password['pwd'])
+
+        if password_matches:
+            session['user'] = login
+            return redirect(url_for('index', login=login))
+        else:
+            return 'abc'
+
+        return session['user']
 
 
 @app.route("/get-boards")
