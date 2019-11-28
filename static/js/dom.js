@@ -105,6 +105,16 @@ function getBoardCollumns(boardColumn){
     return result;
 }
 
+function binsAddEvent(container){
+    let bins = document.querySelectorAll(".card-remove");
+    for(var i = bins.length - 1; i >= 0; i--){
+        bins[i].addEventListener("click", function(){
+            let that = this, cardNode = that.parentNode;
+            cardNode.parentNode.removeChild(cardNode);
+        }, false);
+    }
+}
+
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 export let dom = {
