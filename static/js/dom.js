@@ -27,7 +27,24 @@ function toggle(boardsMenus){
     }
 }
 
+function getBoardCollumns(boardColumn){
+    let columns = boardColumn.querySelectorAll(".board-column"), result = {newC: null, inProgress: null, testing: null, done: null},
+    nodeTitle, nodeContent;
+    for(var i = columns.length - 1; i >= 0; i--){
+        nodeTitle = columns[i].querySelectorAll(".board-column-title");
+        nodeContent = columns[i].querySelectorAll(".board-column-content");
+
+        if(nodeTitle.length < 1 || nodeContent.length < 1) continue;
+
+        nodeTitle = nodeTitle[0];
+        nodeContent = nodeContent[0];
+
+
+    }
+}
+
 export let dom = {
+    cards: [],
     init: function () {
         let result, boards;// This function should run once, when the page is loaded.
 
@@ -35,9 +52,9 @@ export let dom = {
         return boards;
     },
     loadBoards: function (boards) {
-        let cards = [], count = boards.length, board, n;
+        let count = boards.length, board, n;
         for(var i = 0; i < count; i++){
-            cards.push({newC: [], inProgress: [], testing: [], done: []});
+            dom.cards.push({newC: null, inProgress: null, testing: null, done: null});
             boardMenus.push({addC: null, toggle: null, container: null, visible: true});
 
 
