@@ -34,10 +34,14 @@ function createCard(container, text){
     node.className = "card-title";
     cardNode.appendChild(node);
 
-    elem = document.createElement("input");
-    elem.type = "text";
-    node.appendChild(elem);
-    elem.addEventListener("keyup", typeCardTitle, false);
+    if(dom.isString(text) ){
+        node.appendChild(document.createTextNode(text) );
+    } else {
+        elem = document.createElement("input");
+        elem.type = "text";
+        node.appendChild(elem);
+        elem.addEventListener("keyup", typeCardTitle, false);
+    }
 
     container.appendChild(cardNode);
 }
@@ -50,7 +54,7 @@ function addCard(e){
 
     for(var i = boardMenus.length - 1; i >= 0; i--){
         if(boardMenus[i].addC == button){
-            createCard(dom.cards[i].newC);
+            createCard(dom.cards[i].newC, false);
         }
     }
 }
