@@ -3,9 +3,18 @@ import { dataHandler } from "./data_handler.js";
 
 export let dom = {
     init: function () {
-        // This function should run once, when the page is loaded.
+        let result, boards;// This function should run once, when the page is loaded.
+
+        boards = document.querySelectorAll(".board");
+        return boards;
     },
-    loadBoards: function () {
+    loadBoards: function (boards) {
+        let cards = [], i, count = boards.length;
+        for(i = 0; i < count; i++){
+            cards.push({newC: [], inProgress: [], testing: [], done: []});
+
+
+        }
         // retrieves boards and makes showBoards called
         dataHandler.getBoards(function(boards){
             dom.showBoards(boards);
