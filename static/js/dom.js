@@ -16,7 +16,7 @@ function typeCardTitle(e){
     parentDiv.appendChild(document.createTextNode(text) );
 }
 
-function createCard(container){
+function createCard(container, text){
     var cardNode = document.createElement("div"), node = document.createElement("div");
     cardNode.className = "card";
 
@@ -170,6 +170,12 @@ export let dom = {
         // it adds necessary event listeners also
     },
     // here comes more features
+    function isString(str){
+        var result = false;
+        if( typeof str == "string" || (typeof st == "object" && st.constructor === String) ) result = true;
+        if(result === true && str.length == 0) result = false;
+        return result;
+    }
 };
 
 let createBoard = function () {
