@@ -1,6 +1,32 @@
 // It uses data_handler.js to visualize elements
 import { dataHandler } from "./data_handler.js";
 
+var boardMenus = [];
+
+function toggle(boardsMenus){
+    for(var i = boardsMenus.length - 1; i >= 0; i--){
+        if(!boardsMenus[i].toggle || !boardsMenus[i].container) continue;
+        boardsMenus[i].toggle.addEventListener("click", function(e){
+            var event = (e)?e:window.event, button;
+
+            if(event.target) button = event.target.parentNode;
+            else if(event.srcElement) button = event.srcElement.parentNode;
+
+            for(var j = boardMenus.length - 1; j >= 0; j--){
+                if(boardMenus[j].toggle == button){
+                    if(boardMenus[j].visible){
+                        boardsMenus[j].container.style.display = "none";
+                        boardsMenus[j].visible = false;
+                    } else {
+                        boardsMenus[j].container.style.display = "";
+                        boardsMenus[j].visible = true;
+                    }
+                }
+            }
+        }, false);
+    }
+}
+
 export let dom = {
     init: function () {
         let result, boards;// This function should run once, when the page is loaded.
@@ -9,12 +35,24 @@ export let dom = {
         return boards;
     },
     loadBoards: function (boards) {
-        let cards = [], i, count = boards.length;
-        for(i = 0; i < count; i++){
+        let cards = [], count = boards.length, board, n;
+        for(var i = 0; i < count; i++){
             cards.push({newC: [], inProgress: [], testing: [], done: []});
+            boardMenus.push({addC: null, toggle: null, container: null, visible: true});
 
+
+            board = boards[i];
+            let elems = board.getElementsByTagName("button"), j;
+            for(j = elems.length - 1; j >= 0; j--){
+                if(elems[j].className == "board-add") boardMenus[i].addC = elems[j];
+                else if(elems[j].className == "board-toggle") boardMenus[i].toggle = elems[j];
+            }
+            elems = board.querySelectorAll(".board-columns");
+            if(elems.length > 0) boardMenus[i].container = elems[0];
 
         }
+
+        toggle(boardMenus);
         // retrieves boards and makes showBoards called
         dataHandler.getBoards(function(boards){
             dom.showBoards(boards);
