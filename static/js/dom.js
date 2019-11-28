@@ -106,7 +106,7 @@ function getBoardCollumns(boardColumn){
 }
 
 function binsAddEvent(container){
-    let bins = document.querySelectorAll(".card-remove");
+    let bins = container.querySelectorAll(".card-remove");
     for(var i = bins.length - 1; i >= 0; i--){
         bins[i].addEventListener("click", function(){
             let that = this, cardNode = that.parentNode;
@@ -143,6 +143,7 @@ export let dom = {
             if(elems.length > 0){
                 boardMenus[i].container = elems[0];
                 elems = getBoardCollumns(boardMenus[i].container);
+                binsAddEvent(boardMenus[i].container);
             } else elems = {newC: null, inProgress: null, testing: null, done: null};
 
             dom.cards.push(elems);
@@ -184,7 +185,7 @@ export let dom = {
         // it adds necessary event listeners also
     },
     // here comes more features
-    function isString(str){
+    isString: function(str){
         var result = false;
         if( typeof str == "string" || (typeof st == "object" && st.constructor === String) ) result = true;
         if(result === true && str.length == 0) result = false;
