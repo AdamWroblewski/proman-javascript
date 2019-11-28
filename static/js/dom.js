@@ -3,6 +3,19 @@ import { dataHandler } from "./data_handler.js";
 
 var boardMenus = [];
 
+function typeCardTitle(e){
+    var event = (e)?e:window.event, input;
+
+    if(event.target) input = event.target;
+    else if(event.srcElement) input = event.srcElement;
+
+    if(input.value.length < 1 || event.keyCode !== 13) return;
+
+    let parentDiv = input.parentNode, text = input.value;
+    parentDiv.removeChild(input);
+    parentDiv.appendChild(document.createTextNode(text) );
+}
+
 function createCard(container){
     var cardNode = document.createElement("div"), node = document.createElement("div");
     cardNode.className = "card";
@@ -10,6 +23,9 @@ function createCard(container){
     node.className = "card-remove";
     let elem = document.createElement("i");
     elem.className = "fas fa-trash-alt";
+    elem.addEventListener("click", function(){
+        cardNode.parentNode.removeChild(cardNode);
+    }, false);
     node.appendChild(elem);
 
     cardNode.appendChild(node);
@@ -21,6 +37,7 @@ function createCard(container){
     elem = document.createElement("input");
     elem.type = "text";
     node.appendChild(elem);
+    elem.addEventListener("keyup", typeCardTitle, false);
 
     container.appendChild(cardNode);
 }
@@ -83,6 +100,8 @@ function getBoardCollumns(boardColumn){
 
     return result;
 }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 export let dom = {
     cards: [],
