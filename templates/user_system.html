@@ -1,14 +1,14 @@
 {% extends 'layout.html' %}
 {% block content %}
   {% if action == 'register' %}
-    {% set action = "{{ url_for('register_route') }}" %}
+    {% set action = "register_route" %}
     {% set buttonText = 'Register' %}
   {% elif action == 'login' %}
-    {% set action = "{{ url_for('login_route') }}" %}
+    {% set action = "login_route" %}
     {% set buttonText = 'Login' %}
   {% endif %}
   <div class="user-system-div">
-    <form method="post" action={{ action }}>
+    <form method="post" action="{{ url_for(action) }}">
       <input type="text" name="login">
       <input type="password" name="password">
       <button type="submit">{{ buttonText }}</button>
