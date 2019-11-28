@@ -3,6 +3,41 @@ import { dataHandler } from "./data_handler.js";
 
 var boardMenus = [];
 
+function createCard(container){
+    var cardNode = document.createElement("div"), node = document.createElement("div");
+    cardNode.className = "card";
+
+    node.className = "card-remove";
+    let elem = document.createElement("i");
+    elem.className = "fas fa-trash-alt";
+    node.appendChild(elem);
+
+    cardNode.appendChild(node);
+
+    node = document.createElement("div");
+    node.className = "card-title";
+    cardNode.appendChild(node);
+
+    elem = document.createElement("input");
+    elem.type = "text";
+    node.appendChild(elem);
+
+    container.appendChild(cardNode);
+}
+
+function addCard(e){
+    var event = (e)?e:window.event, button;
+
+    if(event.target) button = event.target;
+    else if(event.srcElement) button = event.srcElement;
+
+    for(var i = boardMenus.length - 1; i >= 0; i--){
+        if(boardMenus[i].addC == button){
+            createCard(dom.cards[i].newC);
+        }
+    }
+}
+
 function toggle(boardsMenus){
     for(var i = boardsMenus.length - 1; i >= 0; i--){
         if(!boardsMenus[i].toggle || !boardsMenus[i].container) continue;
@@ -27,7 +62,30 @@ function toggle(boardsMenus){
     }
 }
 
+function getBoardCollumns(boardColumn){
+    let columns = boardColumn.querySelectorAll(".board-column"), result = {newC: null, inProgress: null, testing: null, done: null},
+    nodeTitle, nodeContent, header;
+    for(var i = columns.length - 1; i >= 0; i--){
+        nodeTitle = columns[i].querySelectorAll(".board-column-title");
+        nodeContent = columns[i].querySelectorAll(".board-column-content");
+
+        if(nodeTitle.length < 1 || nodeContent.length < 1) continue;
+
+        nodeTitle = nodeTitle[0];
+        nodeContent = nodeContent[0];
+
+        header = nodeTitle.innerHTML.toLowerCase();
+        if(header == "new") result.newC = nodeContent;
+        else if(header == "in progress") result.inProgress = nodeContent;
+        else if(header == "testing") result.testing = nodeContent;
+        else if(header == "done") result.done = nodeContent;
+    }
+
+    return result;
+}
+
 export let dom = {
+    cards: [],
     init: function () {
         let result, boards;// This function should run once, when the page is loaded.
 
@@ -35,21 +93,26 @@ export let dom = {
         return boards;
     },
     loadBoards: function (boards) {
-        let cards = [], count = boards.length, board, n;
+        let count = boards.length, board, n;
         for(var i = 0; i < count; i++){
-            cards.push({newC: [], inProgress: [], testing: [], done: []});
             boardMenus.push({addC: null, toggle: null, container: null, visible: true});
 
 
             board = boards[i];
             let elems = board.getElementsByTagName("button"), j;
             for(j = elems.length - 1; j >= 0; j--){
-                if(elems[j].className == "board-add") boardMenus[i].addC = elems[j];
-                else if(elems[j].className == "board-toggle") boardMenus[i].toggle = elems[j];
+                if(elems[j].className == "board-add"){
+                    boardMenus[i].addC = elems[j];
+                    boardMenus[i].addC.addEventListener("click", addCard, false);
+                } else if(elems[j].className == "board-toggle") boardMenus[i].toggle = elems[j];
             }
             elems = board.querySelectorAll(".board-columns");
-            if(elems.length > 0) boardMenus[i].container = elems[0];
+            if(elems.length > 0){
+                boardMenus[i].container = elems[0];
+                elems = getBoardCollumns(boardMenus[i].container);
+            } else elems = {newC: null, inProgress: null, testing: null, done: null};
 
+            dom.cards.push(elems);
         }
 
         toggle(boardMenus);
