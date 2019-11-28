@@ -16,7 +16,7 @@ function typeCardTitle(e){
     parentDiv.appendChild(document.createTextNode(text) );
 }
 
-function createCard(container){
+function createCard(container, text){
     var cardNode = document.createElement("div"), node = document.createElement("div");
     cardNode.className = "card";
 
@@ -34,10 +34,14 @@ function createCard(container){
     node.className = "card-title";
     cardNode.appendChild(node);
 
-    elem = document.createElement("input");
-    elem.type = "text";
-    node.appendChild(elem);
-    elem.addEventListener("keyup", typeCardTitle, false);
+    if(dom.isString(text) ){
+        node.appendChild(document.createTextNode(text) );
+    } else {
+        elem = document.createElement("input");
+        elem.type = "text";
+        node.appendChild(elem);
+        elem.addEventListener("keyup", typeCardTitle, false);
+    }
 
     container.appendChild(cardNode);
 }
@@ -50,7 +54,7 @@ function addCard(e){
 
     for(var i = boardMenus.length - 1; i >= 0; i--){
         if(boardMenus[i].addC == button){
-            createCard(dom.cards[i].newC);
+            createCard(dom.cards[i].newC, false);
         }
     }
 }
@@ -99,6 +103,16 @@ function getBoardCollumns(boardColumn){
     }
 
     return result;
+}
+
+function binsAddEvent(container){
+    let bins = document.querySelectorAll(".card-remove");
+    for(var i = bins.length - 1; i >= 0; i--){
+        bins[i].addEventListener("click", function(){
+            let that = this, cardNode = that.parentNode;
+            cardNode.parentNode.removeChild(cardNode);
+        }, false);
+    }
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -170,6 +184,12 @@ export let dom = {
         // it adds necessary event listeners also
     },
     // here comes more features
+    function isString(str){
+        var result = false;
+        if( typeof str == "string" || (typeof st == "object" && st.constructor === String) ) result = true;
+        if(result === true && str.length == 0) result = false;
+        return result;
+    }
 };
 
 let createBoard = function () {
