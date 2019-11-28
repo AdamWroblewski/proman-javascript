@@ -18,7 +18,7 @@
         <a href="{{ url_for('user_page_route', action='register') }}">Register</a>
         <a href="{{ url_for('user_page_route', action='login') }}">Login</a>
       {% else %}
-        <span>Hello {{ session['user'] }}</span>
+        <span class="logged-user">Hello {{ session['user'] }}</span>
         <a href="{{ url_for('logout_route') }}">Logout</a>
       {% endif %}
     </div>
